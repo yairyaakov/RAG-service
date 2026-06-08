@@ -19,33 +19,44 @@ The system supports PDF, CSV, and TXT files, performs semantic retrieval using v
 
 ```mermaid
 flowchart TD
-    A[Upload PDF / CSV / TXT]
-    B[Parsing]
-    C[Chunking]
-    D[Embeddings]
-    E[FAISS Vector Store]
-    F[Semantic Retrieval]
-    G[Prompt Construction]
-    H[OpenAI LLM]
-    I[Answer]
 
-    J[(MongoDB Chat History)]
+    A[User Uploads Document]
+    B[Document Parsing]
+    C[Chunking]
+    D[Embedding Generation]
+    E[(FAISS Vector Store)]
+
+    F[User Query]
+    G[Query Embedding]
+    H[Semantic Retrieval]
+
+    I[(MongoDB Chat History)]
+    J[Prompt Construction<br/>Context + History + Query]
+
+    K[OpenAI LLM]
+    L[Grounded Response]
 
     A --> B
     B --> C
     C --> D
     D --> E
 
-    E --> F
     F --> G
-    J --> G
-
     G --> H
-    H --> I
+    E --> H
+
+    H --> J
+    I --> J
+
+    J --> K
+    K --> L
 ```
 
-Conversation history is stored in MongoDB and cached in memory to improve response times and reduce database access.
+The system follows a Retrieval-Augmented Generation (RAG) architecture.
 
+Uploaded documents are parsed, split into chunks, converted into embeddings, and indexed in FAISS. When a user submits a query, the query is embedded into the same vector space and used to retrieve the most relevant chunks. The retrieved context, together with chat history stored in MongoDB, is used to construct a prompt that is sent to the LLM for response generation.
+
+Conversation history is cached in memory and persisted in MongoDB to improve performance while maintaining durability.
 
 ---
 

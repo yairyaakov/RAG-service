@@ -5,6 +5,50 @@ It allows you to **upload PDF or CSV documents, store them as vector embeddings 
 
 ---
 
+## What it does
+
+RAGify is a Retrieval-Augmented Generation (RAG) service that enables users to upload documents and interact with them using natural language.
+
+Traditional Large Language Models (LLMs) do not have access to a user's private documents and may generate answers that are generic or not grounded in the actual content. RAGify addresses this limitation by retrieving relevant information from uploaded documents before generating a response.
+
+The system supports PDF, CSV, and TXT files, performs semantic retrieval using vector embeddings, and generates context-aware responses using OpenAI language models.
+
+---
+
+## Architecture
+
+```mermaid
+flowchart TD
+    A[Upload PDF / CSV / TXT]
+    B[Parsing]
+    C[Chunking]
+    D[Embeddings]
+    E[FAISS Vector Store]
+    F[Semantic Retrieval]
+    G[Prompt Construction]
+    H[OpenAI LLM]
+    I[Answer]
+
+    J[(MongoDB Chat History)]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+
+    E --> F
+    F --> G
+    J --> G
+
+    G --> H
+    H --> I
+```
+
+Conversation history is stored in MongoDB and cached in memory to improve response times and reduce database access.
+
+
+---
+
 ## Features
 
 - Upload and parse **PDF** and **CSV** files.

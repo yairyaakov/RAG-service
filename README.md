@@ -49,6 +49,77 @@ Conversation history is stored in MongoDB and cached in memory to improve respon
 
 ---
 
+## Tech Stack
+### Backend
+- Python
+- FastAPI
+### Retrieval Layer
+- LangChain
+- FAISS
+- OpenAI Embeddings
+- SentenceTransformers (MiniLM-L6-v2)
+### Data Processing
+- PyMuPDF
+- Pandas
+### Storage
+- MongoDB
+- In-Memory Cache
+### Infrastructure
+- Docker
+- Uvicorn
+### AI Services
+- OpenAI GPT Models
+- OpenAI Embeddings API
+
+---
+
+## Design Decisions
+### Why FAISS?
+
+FAISS provides efficient vector similarity search and can run locally without requiring an external vector database service.
+
+### Why MongoDB?
+
+Chat history is naturally represented as flexible JSON-like documents. MongoDB allows simple storage and retrieval of conversations by user and session.
+
+### Why separate Retrieval from Generation?
+
+Keeping retrieval and generation independent makes the system easier to maintain, test, and extend. The embedding model, vector store, or LLM provider can be replaced without redesigning the entire pipeline.
+
+### Why store history both in memory and MongoDB?
+
+MongoDB provides persistence, while the in-memory cache improves performance by avoiding repeated database queries for active conversations.
+
+---
+
+## Example Workflow
+### 1. Upload a document
+
+Upload a PDF, CSV, or TXT file through the /upload endpoint.
+
+### 2. Document indexing
+
+The service:
+
+- Extracts text
+- Splits it into chunks
+- Generates embeddings
+- Stores vectors in FAISS
+  
+### 3. Ask a question
+
+The user sends a question through /chat or /async_chat.
+
+### 4. Semantic retrieval
+
+Relevant chunks are retrieved from FAISS using vector similarity search.
+
+### 5. Response generation
+
+The retrieved context and chat history are combined into a prompt and sent to the LLM, which generates a grounded response.
+
+---
+
 ## Features
 
 - Upload and parse **PDF** and **CSV** files.

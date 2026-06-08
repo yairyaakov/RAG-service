@@ -73,6 +73,23 @@ Conversation history is stored in MongoDB and cached in memory to improve respon
 
 ---
 
+## Project Structure
+
+```text
+app/
+├── routers/
+│   ├── chat.py
+│   └── upload.py
+├── services/
+│   ├── embedding.py
+│   ├── faiss_store.py
+│   ├── file_parser.py
+│   ├── memory.py
+│   └── openai_llm.py
+└── main.py
+
+---
+
 ## Design Decisions
 ### Why FAISS?
 

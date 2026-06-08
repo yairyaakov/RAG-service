@@ -87,7 +87,7 @@ app/
 │   ├── memory.py
 │   └── openai_llm.py
 └── main.py
-
+```
 ---
 
 ## Design Decisions
